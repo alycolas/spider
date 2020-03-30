@@ -3,8 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-//	"bufio"
-//	"os"
+	// "os"
 	"io/ioutil"
 	"github.com/PuerkitoBio/goquery"
 	"flag"
@@ -12,6 +11,7 @@ import (
 
 // const domain = "https://rarbggo.org"
 const domain = "https://rarbg.to"
+const route = "/torrents.php"
 
 var (
 	key string
@@ -24,9 +24,9 @@ func init(){
 	flag.StringVar(&key, "k", "", "input keyworld for search")
 }
 
-func gethtml(url string, key string, order string) string{
+func gethtml(domain string,url string) *http.Response {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", url+"/torrents.php", nil)
+	req, err := http.NewRequest("GET", domain+url, nil)
 	if err != nil {
 		fmt.Println("Cannot Get The Page")
 	}
@@ -39,7 +39,7 @@ func gethtml(url string, key string, order string) string{
 	q.Add("by", "DESC")
 	q.Add("order", order)
 	q.Add("search", key)
-	q.Add("r", "97888647")
+	q.Add("r", "58895938")
 	req.URL.RawQuery = q.Encode()
 //	fmt.Println(req.URL.String())
 
@@ -52,10 +52,10 @@ func gethtml(url string, key string, order string) string{
 	req.Header.Add("Sec-Fetch-Site", "same-origin")
 	req.Header.Add("Sec-Fetch-Mode", "navigate")
 	req.Header.Add("Sec-Fetch-User", "?1")
-	req.Header.Add("Referer", "https://rarbggo.org/threat_defence.php?defence=2&sk=n0b72m4p3s&cid=30308730&i=1651319939&ref_cookie=rarbggo.org&r=43488754")
+	req.Header.Add("Referer", "https://rarbggo.org/threat_defence.php?defence=2&sk=ivw8n3txk4&cid=30345969&i=1653236204&ref_cookie=rarbggo.org&r=53137537")
 	req.Header.Add("Accept-Encoding", "utf8")
 	req.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
-	req.Header.Add("Cookie", "skt=copwtaeumc; gaDts48g=q8h5pp9t; skt=copwtaeumc; gaDts48g=q8h5pp9t; tcc; aby=2; ppu_main_9ef78edf998c4df1e1636c9a474d9f47=1; ppu_sub_9ef78edf998c4df1e1636c9a474d9f47=3")
+	req.Header.Add("Cookie", "__cfduid=d92d4047dcf864b1c3734f2b8ebff16ea1585458894; gaDts48g=q8h5pp9t; gaDts48g=q8h5pp9t; aby=1; tcc; skt=s2xywz67gh; skt=s2xywz67gh; expla=1")
 
 	resp ,err := client.Do(req)
 	if err != nil {
@@ -68,6 +68,11 @@ func gethtml(url string, key string, order string) string{
 //	fmt.Println(os.Stdout, string(html))
 //	// eng of Test
 
+	return resp
+}
+
+func getpage(domain string, url string) string {
+	resp := gethtml(domain, url)
 	dom, err := goquery.NewDocumentFromResponse(resp)
 	if err != nil {
 		panic(err)
@@ -102,40 +107,14 @@ func gethtml(url string, key string, order string) string{
 	return nextUrl[i]
 }
 
-
-func getMagnet(domain string,url string) string {
+func getMagnet(domain string, url string) string {
+	resp := gethtml(domain, url)
 	var magnet string
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", domain+url, nil)
-	if err != nil {
-		fmt.Println("Cannot Get The Page")
-	}
-
-	q := req.URL.Query()
-	q.Add("r", "97888647")
-	req.URL.RawQuery = q.Encode()
-//	fmt.Println(req.URL.String())
-
-//	req.Header.Add("Host", "rarbgprx.org")
-	req.Header.Add("Connection", "keep-alive")
-	req.Header.Add("Upgrade-Insecure-Requests", "1")
-	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36 Edg/80.0.361.69")
-	req.Header.Add("Sec-Fetch-Dest", "document")
-	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-	req.Header.Add("Sec-Fetch-Site", "same-origin")
-	req.Header.Add("Sec-Fetch-Mode", "navigate")
-	req.Header.Add("Sec-Fetch-User", "?1")
-	req.Header.Add("Referer", "https://rarbggo.org/threat_defence.php?defence=2&sk=n0b72m4p3s&cid=30308730&i=1651319939&ref_cookie=rarbggo.org&r=43488754")
-	req.Header.Add("Accept-Encoding", "utf8")
-	req.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
-	req.Header.Add("Cookie", "skt=copwtaeumc; gaDts48g=q8h5pp9t; skt=copwtaeumc; gaDts48g=q8h5pp9t; tcc; aby=2; ppu_main_9ef78edf998c4df1e1636c9a474d9f47=1; ppu_sub_9ef78edf998c4df1e1636c9a474d9f47=3")
-
-	resp ,err := client.Do(req)
+	dom, err := goquery.NewDocumentFromResponse(resp)
 	if err != nil {
 		panic(err)
 	}
 
-	dom, err := goquery.NewDocumentFromResponse(resp)
 	dom.Find("img[src=\"https://dyncdn.me/static/20/img/16x16/download.png\"]+a+a").Each(func(i int, sel *goquery.Selection) {
 		mag, _ := sel.Attr("href")
 		fmt.Println(mag)
@@ -146,7 +125,7 @@ func getMagnet(domain string,url string) string {
 
 func main() {
 	flag.Parse()
-	url := gethtml(domain, key, order)
+	url := getpage(domain, route)
 	magnet := getMagnet(domain, url)
 	ioutil.WriteFile("/tmp/MAG", []byte(magnet), 0666)
 }
