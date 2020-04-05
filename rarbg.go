@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-	// "os"
+	//"os"
 	"io/ioutil"
 	"github.com/PuerkitoBio/goquery"
 	"flag"
@@ -39,7 +39,7 @@ func gethtml(domain string,url string) *http.Response {
 	q.Add("by", "DESC")
 	q.Add("order", order)
 	q.Add("search", key)
-	q.Add("r", "58895938")
+	q.Add("r", "89901527")
 	req.URL.RawQuery = q.Encode()
 //	fmt.Println(req.URL.String())
 
@@ -52,10 +52,10 @@ func gethtml(domain string,url string) *http.Response {
 	req.Header.Add("Sec-Fetch-Site", "same-origin")
 	req.Header.Add("Sec-Fetch-Mode", "navigate")
 	req.Header.Add("Sec-Fetch-User", "?1")
-	req.Header.Add("Referer", "https://rarbggo.org/threat_defence.php?defence=2&sk=ivw8n3txk4&cid=30345969&i=1653236204&ref_cookie=rarbggo.org&r=53137537")
+	req.Header.Add("Referer", "https://rarbg.to/threat_defence.php?defence=2&sk=ha3l541gdq&cid=30380088&i=1655015496&ref_cookie=rarbg.to&r=32212572")
 	req.Header.Add("Accept-Encoding", "utf8")
 	req.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
-	req.Header.Add("Cookie", "__cfduid=d92d4047dcf864b1c3734f2b8ebff16ea1585458894; gaDts48g=q8h5pp9t; gaDts48g=q8h5pp9t; aby=1; tcc; skt=s2xywz67gh; skt=s2xywz67gh; expla=1")
+	req.Header.Add("Cookie", "__cfduid=d5555d218c15100c8c9352b7cebf2825f1571727890; gaDts48g=q8h5pp9t; aby=1; skt=D8F9Bz5qm2; skt=D8F9Bz5qm2; gaDts48g=q8h5pp9t")
 
 	resp ,err := client.Do(req)
 	if err != nil {
